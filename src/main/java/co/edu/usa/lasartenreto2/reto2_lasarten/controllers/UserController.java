@@ -77,7 +77,7 @@ public class UserController {
     /**
      * metodo get por email
      */
-    @GetMapping("/{email}")
+    @GetMapping("/emailexist/{email}")
     public boolean existeEmail(@PathVariable("email") String email) {
         return userService.emailExists(email);
     }
