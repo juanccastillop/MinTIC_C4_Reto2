@@ -7,15 +7,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import co.edu.usa.lasartenreto2.reto2_lasarten.models.User;
-import co.edu.usa.lasartenreto2.reto2_lasarten.repositories.crud.UserCrudRepository;
+import co.edu.usa.lasartenreto2.reto2_lasarten.repositories.crud.UserInterface;
 
 @Repository
 public class UserRepository {
     
     @Autowired
-    private UserCrudRepository userCrudRepository;
-
-    public List<User> getAll() {
+    private UserInterface userCrudRepository;
+     
+       public List<User> getAll() {
         return (List<User>) userCrudRepository.findAll();
     }
 
@@ -23,17 +23,50 @@ public class UserRepository {
         return userCrudRepository.findById(id);
     }
 
-    public User save(User user) {
+    public User create(User user) {
         return userCrudRepository.save(user);
     }
+    
+    public void update(User user) {
+        userCrudRepository.save(user);
+    }
+    
+    public void delete(User user) {
+        userCrudRepository.delete(user);
+    }
 
-    public boolean existeEmail(String email) {
+    public boolean emailExists(String email) {
         Optional<User> usuario = userCrudRepository.findByEmail(email);
-
+        
         return !usuario.isEmpty();
     }
-
-    public Optional<User> autenticarUsuario(String email, String password) {
+    
+    public Optional<User> authenticateUser(String email, String password) {
         return userCrudRepository.findByEmailAndPassword(email, password);
     }
+     
+     
+    
+
+    
+    
+    
+
+    
+    
+    
+
+    
+    
+    
+
+    
+    
+
+    
+    
+
+    
+    
+    
 }
