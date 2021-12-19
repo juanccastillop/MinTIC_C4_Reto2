@@ -68,7 +68,7 @@ function traerUsuarios() {
                 setTimeout(
                     function(){ 
                         $(document).ready(function(){
-                            $(location).attr('href',"menuUser.html");
+                            $(location).attr('href',"PanelAdmin.html");
                         });
                     }, 1000
                 );

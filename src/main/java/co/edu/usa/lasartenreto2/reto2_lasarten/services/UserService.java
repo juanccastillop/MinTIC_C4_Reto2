@@ -11,10 +11,10 @@ import co.edu.usa.lasartenreto2.reto2_lasarten.repositories.UserRepository;
 
 @Service
 public class UserService {
-    
+
     @Autowired
     private UserRepository userRepository;
-    
+
     public List<User> getAll() {
         return userRepository.getAll();
     }
@@ -24,22 +24,33 @@ public class UserService {
     }
 
     public User create(User user) {
+
+        // Obtiene el id maximo existente en la coleccion/tabla de BD
+        Optional<User> userIdMaximo = userRepository.lastUserId();
+        // si el id de usuario enviado en la peticion es nulo, entonces valida el id
+        // maximo para enviarlo automaticamente
         if (user.getId() == null) {
-            return user;            
-        }else {
-            Optional<User> e = userRepository.getUser(user.getId());
-            if (e.isEmpty()) {
-                if (emailExists(user.getEmail())==false){
-                    return userRepository.create(user);
-                }else{
-                    return user;
-                }
-            }else{
-                return user;
-            }           
+            // valida el id maximo generado, si no hay ningun id se tomara el valor de 1
+            if (userIdMaximo.isEmpty())
+                user.setId(1);
+            // sino retorna la informacion del ultimo id existente y le suma uno asignandolo
+            // a la variable
+            else
+                user.setId(userIdMaximo.get().getId() + 1);
         }
+        Optional<User> e = userRepository.getUser(user.getId());
+        if (e.isEmpty()) {
+            if (emailExists(user.getEmail()) == false) {
+                return userRepository.create(user);
+            } else {
+                return user;
+            }
+        } else {
+            return user;
+        }
+
     }
-    
+
     public User update(User user) {
 
         if (user.getId() != null) {
@@ -66,7 +77,9 @@ public class UserService {
                 if (user.getZone() != null) {
                     userDb.get().setZone(user.getZone());
                 }
-                
+                if (user.getType() != null) {
+                    userDb.get().setType(user.getType());
+                }
                 userRepository.update(userDb.get());
                 return userDb.get();
             } else {
@@ -76,7 +89,7 @@ public class UserService {
             return user;
         }
     }
-    
+
     public boolean delete(int userId) {
         Boolean aBoolean = getUser(userId).map(user -> {
             userRepository.delete(user);
@@ -84,7 +97,7 @@ public class UserService {
         }).orElse(false);
         return aBoolean;
     }
-    
+
     public boolean emailExists(String email) {
         return userRepository.emailExists(email);
     }
@@ -98,5 +111,5 @@ public class UserService {
             return usuario.get();
         }
     }
-       
+
 }

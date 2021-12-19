@@ -58,24 +58,27 @@ function guardarUsuarios() {
     var email = $("#email").val();
 
     $.ajax({
-        url: "http://localhost:8080/api/user/" + email,
+        url: "http://localhost:8080/api/user/emailexist/" + email,
         type: "GET",
         datatype: "JSON",
         success: function(response) {
-            //console.log(response)
+            console.log(response)
             if (response == true) {
                 swal("El usuario ya existe, valide los datos o ingrese al sistema por el Login", "Validación Incorrecta", "error");
             } else {
                 let myData={
-                    name:$("#name").val(),
+                    id:$("#id").val(),
                     identification:$("#identification").val(),
+                    name:$("#name").val(),
+                    address:$("#address").val(),
                     cellPhone:$("#cellPhone").val(),
+                    zone:$("#zone").val(),
+                    type:$("#type").val(),
                     email:$("#email").val(),
-                    password:$("#password").val(),
-                    age:$("#age").val()
+                    password:$("#password").val()
                 };
                 let dataToSend=JSON.stringify(myData);
-                //console.log(dataToSend);
+                console.log(dataToSend);
                 $.ajax({
                     type: 'POST',
                     contentType: "application/json; charset=utf-8",
